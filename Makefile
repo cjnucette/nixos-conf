@@ -1,7 +1,7 @@
 update:
 	nix flake update
 
-upgrade:
+build:
 	sudo nixos-rebuild switch --flake .
 
 debug:
@@ -10,7 +10,6 @@ debug:
 history:
 	nix profile history --profile /nix/var/nix/profiles/system
 
-gc:
+clean:
 	sudo nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 7d
-
 	sudo nix store gc --debug

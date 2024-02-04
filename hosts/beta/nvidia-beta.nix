@@ -1,6 +1,10 @@
-{config, lib, pkgs, modulesPath, ...}:
 {
-
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}: {
   # Make sure opengl is enabled
   hardware.opengl = {
     enable = true;
@@ -9,16 +13,16 @@
   };
 
   # NVIDIA drivers are unfree.
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [
-      "nvidia-x11"
-    ];
+  nixpkgs.config.allowUnfree = true;
+  # nixpkgs.config.allowUnfreePredicate = pkg:
+  #   builtins.elem (lib.getName pkg) [
+  #     "nvidia-x11"
+  #   ];
 
   # Tell Xorg to use the nvidia driver
   services.xserver.videoDrivers = ["nvidia"];
 
   hardware.nvidia = {
-
     # Modesetting is needed for most wayland compositors
     modesetting.enable = true;
 
@@ -30,6 +34,12 @@
     nvidiaSettings = true;
 
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.legacy_390;
+    # package = config.boot.kernelPackages.nvidiaPackages.legacy_390;
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_390.overrideAttrs (old: {
+      postfixUp = ''
+        mv $out/lib/tls/* $out/lib
+        rmdir $out/lib/tls
+      '';
+    });
   };
 }

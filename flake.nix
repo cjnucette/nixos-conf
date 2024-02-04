@@ -1,7 +1,7 @@
 {
-  description = "beta's configuration";
+  description = "NixOS configuration flake";
   inputs = {
-    nixpkgs.url = "github:Nixos/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:Nixos/nixpkgs/nixos-unstable";
 
     nix-index-database = {
       url = "github:Mic92/nix-index-database";
@@ -9,8 +9,11 @@
     };
   };
 
-  outputs = inputs@{ nixpkgs, nix-index-database, ... }: {
-
+  outputs = inputs @ {
+    nixpkgs,
+    nix-index-database,
+    ...
+  }: {
     nixosConfigurations = {
       beta = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
